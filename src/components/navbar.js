@@ -16,9 +16,7 @@ function Navbar() {
         </div>
       </div>
       <div className="nav-links">
-    
         <p>
-          
           <Link to="/">
             <FontAwesomeIcon icon={faHome} />
           </Link>
@@ -29,8 +27,15 @@ function Navbar() {
         <p>
           <Link to="/directory">Alumni Directory</Link>
         </p>
-        <p><Link to="/contactus">Contact us</Link></p>
-        <a href="#login" className="login-btn">
+        <p>
+          <Link to="/contactus">Contact us</Link>
+        </p>
+        <a
+          href="https://alumni-portal-rosy.vercel.app"
+          className="login-btn"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Login
         </a>
       </div>
