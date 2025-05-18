@@ -203,25 +203,49 @@
     .table-div{
       background-color: #d9d9d9;
       table {
-    width: 100%;
-    height: 45vh;
-    border-collapse: collapse;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    border: solid 1px #ddd;
-  }
+        width: 100%;
+        height: 45vh;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border-radius: 10px;
+        overflow: hidden;
+      }
 
-  th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  td{
-    background-color: white;
-  }
+      th, td {
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 1.9vh;
+        transition: background 0.2s;
+        height: fit-content;
+      }
 
-  th {
-    background-color: #bdbdbd;
-  }
+      th {
+        background-color: #196b34;
+        color: #fff;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr {
+        &:hover td {
+          background-color: #f5f5f5;
+        }
+      }
+
+      td {
+        background-color: #fff;
+      }
 
   // td {
   //   vertical-align: middle;

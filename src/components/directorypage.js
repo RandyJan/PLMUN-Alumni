@@ -1,25 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./directorypage.scss";
-import Logo from "../assets/logo.png"; // Adjust the path as necessary
+import Logo from "../assets/logo.png";
 import backgroundImage from "../assets/background.jpg";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faSearch } from "@fortawesome/free-solid-svg-icons";
+import {  faSearch,faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FaFacebook, FaLinkedin, FaYoutube, FaTwitter } from 'react-icons/fa';
-
 import Navbar from "./navbar";
+
 function Directorypage() {
-     useEffect(() => {
-      // Scroll to the contact panel when the page loads
-      scrollToContactPanel();
-    }, []);
-  
-    const scrollToContactPanel = () => {
-      const contactPanel = document.getElementById("directory-panel");
-      if (contactPanel) {
-        contactPanel.scrollIntoView({ behavior: 'smooth' });
-      }
-    };
-  
+  const [alumniData, setAlumniData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 8; // Number of results per page
+
+  const fetchAlumniData = async (page) => {
+    try {
+      const response = await fetch(`https://alumni-portal-api.vercel.app/api/alumni?page=${page}&limit=${limit}`);
+      const data = await response.json();
+      setAlumniData(data.result.data);
+      setTotalPages(Math.ceil(data.result.total / limit)); // Calculate total pages
+    } catch (error) {
+      console.error('Error fetching alumni data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAlumniData(currentPage);
+  }, [currentPage]);
+
+  // Filter alumni by name (first, middle, or last)
+  const filteredAlumni = alumniData.filter(alumnus => {
+    const fullName = `${alumnus.lastName} ${alumnus.firstName} ${alumnus.middleName || ""}`.toLowerCase();
+    return fullName.includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div className="directorypage">
       <div
@@ -32,33 +47,13 @@ function Directorypage() {
           height: "100vh",
         }}
       >
-        {/* <div className="navbar">
-          <div className="logo">
-            <img src={Logo} alt="Logo" />
-            <div>
-              <p className="headername">PLMUN ALUMNI</p>
-              <p className="footername">PAMANTASAN NG LUNGSOD NG MUNTINLUPA</p>
-            </div>
-          </div>
-          <div className="nav-links">
-            <a href="#home">
-              <FontAwesomeIcon icon={faHome} />
-            </a>
-            <a href="#news">About us</a>
-            <a href="#news">Alumni directory</a>
-            <a href="#events">Contact us</a>
-            <a href="#services" className="login-btn">
-              Login
-            </a>
-          </div>
-        </div> */}
         <Navbar />
         <div className="welcome-text blurred-bottom">
           <h1>Pamantasan ng Lungsod ng Muntinlupa</h1>
           <p>
             "Education is the most powerful weapon in the world which you can
-            use to change the world"<br></br>
-            -Nelson Madela
+            use to change the world"<br />
+            -Nelson Mandela
           </p>
         </div>
       </div>
@@ -67,97 +62,105 @@ function Directorypage() {
           <div className="input-div">
             <div className="search-icon">
               <FontAwesomeIcon icon={faSearch} />
-              </div>
+            </div>
             <input
               type="text"
               placeholder="Search"
               className="search-input"
-            ></input>
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
           </div>
           <div className="datepicker">
             <select id="SY" className="school-year" name="sy">
               <option value="apple">Year Graduated (eg. 2023-2024)</option>
               <option value="2023-2024">2023-2024</option>
-              <option value="2023-2024">2022-2023</option>
-              <option value="2023-2024">2021-2022</option>
+              <option value="2022-2023">2022-2023</option>
+              <option value="2021-2022">2021-2022</option>
             </select>
             <select id="course" className="course" name="course">
               <option value="apple">Course (eg. BSCS)</option>
-              <option value="banana">BSCS</option>
-              <option value="cherry">BSCrim</option>
-              <option value="date">BSPSY</option>
+              <option value="BSCS">BSCS</option>
+              <option value="BSCrim">BSCrim</option>
+              <option value="BSPSY">BSPSY</option>
             </select>
           </div>
         </div>
         <div className="table-div">
           <h3>2024-2025 YEAR STUDENT GRADUATED</h3>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Year Graduation</th>
-      <th>Course / Program</th>
-      <th>Achievements & Awards</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Hicoo, Zaldy Jr. C</td>
-      <td>2025 - 2026</td>
-      <td>BSCS</td>
-      <td>N/A</td>
-    </tr>
-    <tr>
-      <td>Dosuyo, Kim Josoph T.</td>
-      <td>2025-2026</td>
-      <td>BSCS</td>
-      <td>Magna Cum Laude</td>
-    </tr>
-    <tr>
-      <td>Orbeso, James Carl V.</td>
-      <td>2025 - 2026</td>
-      <td>BSCS</td>
-      <td>Cum Laude</td>
-    </tr>
-    <tr>
-      <td>Obejos, Jericho C.</td>
-      <td>2025 -2026</td>
-      <td>BSCS</td>
-      <td>Cum Laude</td>
-    </tr>
-    <tr>
-      <td>Galos, Angelo R.</td>
-      <td>2025 - 2026</td>
-      <td>BSCS</td>
-      <td>Magna Cum Laude</td>
-    </tr>
-  </tbody>
-</table>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Year Graduation</th>
+                <th>Course / Program</th>
+                <th>Achievements & Awards</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAlumni && filteredAlumni.length > 0 ? (
+                filteredAlumni.map((alumnus, idx) => (
+                  <tr key={alumnus.userId || idx}>
+                    <td>
+                      {alumnus.lastName}, {alumnus.firstName}
+                      {alumnus.middleName ? ` ${alumnus.middleName}` : ""}
+                    </td>
+                    <td>{alumnus.yearGraduated || "N/A"}</td>
+                    <td>{alumnus.courseProgram || "N/A"}</td>
+                    <td>{alumnus.graduationStatus || "N/A"}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: "center" }}>
+                    No alumni data found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="pagination-controls">
+          <button 
+            disabled={currentPage === 1} 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+          >
+          <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+          <span>{currentPage} of {totalPages}</span>
+          <button 
+            disabled={currentPage === totalPages} 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+          >
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
         </div>
       </div>
-        <div className="footer">
+       <div className="footer">
         <div className="footer1">
-        <div className="logo">
-        <img src={Logo} alt="Logo" />
-        </div>
-        <p>Do you have a question, comment or news tip to pass along to University? you may email or contact us from any details below.</p>
-        <p>University Road NBP Reservation Brgy. Poblacion, City of Muntinlupa, Philippines, 1776</p>
-        <p>plmuncomm@plmun.edu.ph</p>
-        <p>Copyright @ 2023 Pamantasan ng Lungsod ng Muntinlupa. All rights reserved.</p>
+          <div className="logo">
+            <img src={Logo} alt="Logo" />
+          </div>
+          <p>Do you have a question, comment or news tip to pass along to University? you may email or contact us from any details below.</p>
+          <p>University Road NBP Reservation Brgy. Poblacion, City of Muntinlupa, Philippines, 1776</p>
+          <p>plmuncomm@plmun.edu.ph</p>
+          <p>Copyright @ 2023 Pamantasan ng Lungsod ng Muntinlupa. All rights reserved.</p>
         </div>
         <div className="footer2">
-     
-        <p>VISIT OUR OTHER WEBSITE Other Links</p>
-        <p>
-        PLMUN Official Website<br></br><a href="https://plmun.edu.ph/"> https://plmun.edu.ph/</a></p>
-        <p>
-        MUNT INLUPA Official Website of the City of Muntinlupa<br></br><a href="muntinlupacity.gov.ph"> www.muntinlupacity.gov.ph</a></p>
-        <p>
-        CHED Commission on Higher Education (Philippines)<br></br><a href="http:/www.ched.gov.ph">  http:/www.ched.gov.ph</a></p>
-        <p>
-        RDC Muntinlupa City Research Development Consortium<br></br><a href="http:/palmun.edu.ph/mcsdc/"> http:/palmun.edu.ph/mcsdc/</a></p>
+          <p>VISIT OUR OTHER WEBSITE Other Links</p>
+          <p>
+            PLMUN Official Website<br /><a href="https://plmun.edu.ph/"> https://plmun.edu.ph/</a>
+          </p>
+          <p>
+            MUNT INLUPA Official Website of the City of Muntinlupa<br /><a href="muntinlupacity.gov.ph"> www.muntinlupacity.gov.ph</a>
+          </p>
+          <p>
+            CHED Commission on Higher Education (Philippines)<br /><a href="http:/www.ched.gov.ph">  http:/www.ched.gov.ph</a>
+          </p>
+          <p>
+            RDC Muntinlupa City Research Development Consortium<br /><a href="http:/palmun.edu.ph/mcsdc/"> http:/palmun.edu.ph/mcsdc/</a>
+          </p>
         </div>
-
         <div className="footer3">
           <p>Find Us On</p>
           <div className="social-media">
@@ -183,4 +186,5 @@ function Directorypage() {
     </div>
   );
 }
+
 export default Directorypage;

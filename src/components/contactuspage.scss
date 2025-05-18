@@ -221,7 +221,7 @@
             flex-direction: row;
             padding-left: 5vh;
             text-align: center;
-            a{
+            button{
                 background-color: #56aeff;
                 width: 12vh;
                 height: 4vh;
@@ -230,6 +230,7 @@
                 text-decoration: none;
                 color: white;
                 align-content: center;
+                border: none;
                 &:hover{
                     background-color: #45a049;
                 }
