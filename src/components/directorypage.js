@@ -24,7 +24,17 @@ function Directorypage() {
       console.error('Error fetching alumni data:', error);
     }
   };
+  useEffect(() => {
+    // Scroll to the contact panel when the page loads
+    scrollToContactPanel();
+  }, []);
 
+  const scrollToContactPanel = () => {
+    const contactPanel = document.getElementById("directory-panel");
+    if (contactPanel) {
+      contactPanel.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   useEffect(() => {
     fetchAlumniData(currentPage);
   }, [currentPage]);
